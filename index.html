@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Infantil y Juvenil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <!-- Header -->
+    <header class="bg-white shadow sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-indigo-600"><i class="fa-solid fa-child-reaching mr-2"></i>PequeModas</h1>
+            <div class="flex items-center space-x-4">
+                <button onclick="toggleCart()" class="relative bg-indigo-50 text-indigo-600 px-4 py-2 rounded-lg font-medium hover:bg-indigo-100 transition">
+                    <i class="fa-solid fa-cart-shopping mr-1"></i> Carrito <span id="cart-count" class="bg-indigo-600 text-white rounded-full px-2 py-0.5 text-xs">0</span>
+                </button>
+                <a href="admin.html" class="text-sm text-gray-500 hover:text-indigo-600"><i class="fa-solid fa-lock"></i> Admin</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Filtros y Buscador -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+            <div class="flex flex-wrap gap-2">
+                <button onclick="filterCategory('todos')" class="cat-btn bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">Todos</button>
+                <button onclick="filterCategory('bebes')" class="cat-btn bg-white text-gray-600 border px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition">Bebés</button>
+                <button onclick="filterCategory('ninos')" class="cat-btn bg-white text-gray-600 border px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition">Niños</button>
+                <button onclick="filterCategory('juveniles')" class="cat-btn bg-white text-gray-600 border px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition">Juveniles</button>
+                <button onclick="filterCategory('accesorios')" class="cat-btn bg-white text-gray-600 border px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition">Accesorios</button>
+            </div>
+            <div class="w-full md:w-72">
+                <input type="text" id="search-input" oninput="filterProducts()" placeholder="Buscar prendas o accesorios..." class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+        </div>
+
+        <!-- Grid de Productos -->
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Cargando -->
+            <div class="col-span-full text-center py-12 text-gray-500">Cargando catálogo...</div>
+        </div>
+    </main>
+
+    <!-- Modal Carrito / Checkout -->
+    <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex justify-end">
+        <div class="bg-white w-full max-w-md h-full shadow-xl flex flex-col p-6 overflow-y-auto">
+            <div class="flex justify-between items-center border-b pb-4">
+                <h2 class="text-xl font-bold">Tu Carrito de Compras</h2>
+                <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <div id="cart-items" class="flex-1 divide-y py-4 overflow-y-auto">
+                <!-- Items del carrito -->
+            </div>
+
+            <div class="border-t pt-4">
+                <div class="flex justify-between text-lg font-bold mb-4">
+                    <span>Total:</span>
+                    <span id="cart-total">$0.00</span>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Método de Pago:</label>
+                    <select id="payment-method" class="w-full border rounded-lg p-2 text-sm">
+                        <option value="Efectivo">Efectivo (Contra entrega)</option>
+                        <option value="Transferencia">Transferencia Bancaria</option>
+                        <option value="Tarjeta">Tarjeta de Crédito / Débito</option>
+                    </select>
+                </div>
+
+                <button onclick="checkout()" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">Finalizar Compra</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
