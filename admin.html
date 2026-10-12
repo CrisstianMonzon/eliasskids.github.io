@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Tienda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Login Modal/Screen -->
+    <div id="login-screen" class="fixed inset-0 bg-indigo-900 flex justify-center items-center z-50">
+        <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-sm">
+            <h2 class="text-2xl font-bold text-center mb-6 text-indigo-600">Acceso Admin</h2>
+            <form onsubmit="handleLogin(event)">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                    <input type="password" id="admin-pass" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition">Ingresar</button>
+            </form>
+            <p class="text-xs text-gray-400 text-center mt-4">Contraseña por defecto: <b>admin123</b></p>
+        </div>
+    </div>
+
+    <!-- Dashboard (Oculto hasta iniciar sesión) -->
+    <div id="admin-dashboard" class="hidden min-h-screen flex flex-col">
+        <header class="bg-white shadow">
+            <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+                <h1 class="text-xl font-bold text-indigo-600"><i class="fa-solid fa-gauge mr-2"></i>Panel de Control</h1>
+                <div class="space-x-4">
+                    <a href="index.html" class="text-sm text-indigo-600 font-medium hover:underline"><i class="fa-solid fa-store mr-1"></i>Ver Tienda</a>
+                    <button onclick="location.reload()" class="text-sm text-gray-500 hover:text-red-600"><i class="fa-solid fa-right-from-bracket mr-1"></i>Salir</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">
+            <!-- Tabs -->
+            <div class="flex border-b mb-6 space-x-6">
+                <button onclick="switchTab('productos')" id="tab-prod-btn" class="pb-2 font-bold text-indigo-600 border-b-2 border-indigo-600">Gestión de Productos</button>
+                <button onclick="switchTab('ventas')" id="tab-sales-btn" class="pb-2 font-bold text-gray-500 hover:text-indigo-600">Registro de Ventas e Informes</button>
+            </div>
+
+            <!-- TAB 1: PRODUCTOS -->
+            <div id="tab-productos" class="space-y-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-lg font-bold">Inventario de Productos</h2>
+                    <button onclick="openProductModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition"><i class="fa-solid fa-plus mr-1"></i> Nuevo Producto</button>
+                </div>
+
+                <div class="bg-white rounded-xl shadow overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 border-b text-xs font-semibold text-gray-500 uppercase">
+                                <th class="p-4">Imagen</th>
+                                <th class="p-4">Nombre</th>
+                                <th class="p-4">Categoría</th>
+                                <th class="p-4">Precio</th>
+                                <th class="p-4">Stock</th>
+                                <th class="p-4">Talle</th>
+                                <th class="p-4 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-product-table" class="divide-y text-sm">
+                            <!-- Dinámico -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 2: VENTAS E INFORMES -->
+            <div id="tab-ventas" class="hidden space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <h2 class="text-lg font-bold">Historial y Reportes de Ventas</h2>
+                    <div class="space-x-2">
+                        <button onclick="generateReport('diario')" class="bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-gray-300">Reporte Diario</button>
+                        <button onclick="generateReport('semanal')" class="bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-gray-300">Reporte Semanal</button>
+                        <button onclick="generateReport('mensual')" class="bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-gray-300">Reporte Mensual</button>
+                        <button onclick="window.print()" class="bg-indigo-600 text-white px-4 py-1.5 rounded-lg text-xs font-semibold hover:bg-indigo-700"><i class="fa-solid fa-print mr-1"></i> Imprimir Reporte</button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 border-b text-xs font-semibold text-gray-500 uppercase">
+                                <th class="p-4">ID Venta</th>
+                                <th class="p-4">Fecha / Hora</th>
+                                <th class="p-4">Método Pago</th>
+                                <th class="p-4">Total</th>
+                                <th class="p-4">Detalle</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-sales-table" class="divide-y text-sm">
+                            <!-- Dinámico -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Formulario Producto -->
+    <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex justify-center items-center">
+        <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-md">
+            <h3 id="modal-title" class="text-lg font-bold mb-4">Agregar Producto</h3>
+            <form onsubmit="saveProductData(event)">
+                <input type="hidden" id="prod-id">
+                <div class="mb-3">
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Nombre</label>
+                    <input type="text" id="prod-nombre" required class="w-full border rounded-lg p-2 text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Categoría</label>
+                        <select id="prod-categoria" class="w-full border rounded-lg p-2 text-sm">
+                            <option value="bebes">Bebés</option>
+                            <option value="ninos">Niños</option>
+                            <option value="juveniles">Juveniles</option>
+                            <option value="accesorios">Accesorios</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Talle</label>
+                        <input type="text" id="prod-talle" required class="w-full border rounded-lg p-2 text-sm">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Precio ($)</label>
+                        <input type="number" step="0.01" id="prod-precio" required class="w-full border rounded-lg p-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Stock</label>
+                        <input type="number" id="prod-stock" required class="w-full border rounded-lg p-2 text-sm">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-medium text-gray-700 mb-1">URL de Imagen</label>
+                    <input type="url" id="prod-imagen" placeholder="https://..." required class="w-full border rounded-lg p-2 text-sm">
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeProductModal()" class="bg-gray-200 px-4 py-2 rounded-lg text-sm font-semibold">Cancelar</button>
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
